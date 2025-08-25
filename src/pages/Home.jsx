@@ -1,44 +1,45 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import Cards from "../components/Cards";
-import { DataContext } from "../context/DataContext";
 import SearchModel from "../components/SearchModel";
+import api from "../api";
 
 function Home() {
   const inputRef = useRef();
-  const { data } = useContext(DataContext);
   const [searchValue, setSearchValue] = useState("");
   const [result, setResult] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Focus input on mount
   useEffect(() => {
     inputRef.current.focus();
   }, []);
 
-  // Country flag mapping
-
   // Handle Search
-  const handleSearch = () => {
-    const found = data.find(
-      (item) =>
-        item.licenseNumber &&
-        item.licenseNumber.toString().trim() === searchValue.trim()
-    );
+  const handleSearch = async () => {
+    if (!searchValue.trim()) return;
 
-    if (found) {
-      setResult(found);
-      setNotFound(false);
-    } else {
-      setResult(null);
+    setLoading(true);
+    setNotFound(false);
+    setResult(null);
+
+    try {
+      const res = await api.searchLicense(searchValue.trim());
+      if (res.success && res.data) {
+        setResult(res.data);
+        setNotFound(false);
+      } else {
+        setNotFound(true);
+      }
+    } catch (error) {
+      console.error("Search error:", error);
       setNotFound(true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Close modal
-  const closeModal = () => {
-    setResult(null);
-  };
+  const closeModal = () => setResult(null);
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center px-4">
@@ -68,15 +69,18 @@ function Home() {
         </button>
       </div>
 
+      {/* Loading */}
+      {loading && (
+        <p className="mt-4 text-blue-600 font-medium text-lg">Searching...</p>
+      )}
+
       {/* No Data Found */}
-      {notFound && (
+      {notFound && !loading && (
         <p className="mt-4 text-red-600 font-medium text-lg">No data found.</p>
       )}
 
       {/* Modal for Search Result */}
-      {result && (
-       <SearchModel result={result}  closeModal={closeModal}/>
-      )}
+      {result && <SearchModel result={result} closeModal={closeModal} />}
 
       {/* Features Section */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mt-12 drop-shadow-lg">

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { formatDate } from "../util/Date";
 function SearchModel({ closeModal, result }) {
   const flags = {
     Pakistani: "https://flagcdn.com/w320/pk.png",
@@ -12,21 +12,21 @@ function SearchModel({ closeModal, result }) {
       className="fixed inset-0 flex items-center justify-center z-50"
       onClick={closeModal}
     >
-      {/* Fullscreen Flag Background */}
+   
       <div className="absolute inset-0">
         <img
           src={flags[result.nationality] || ""}
           alt={result.nationality}
           className="w-full h-full object-cover"
         />
-        {/* Fullscreen Blur Overlay */}
+     
         <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
       </div>
 
-      {/* Modal Content */}
+     
       <div
         className="relative z-10 w-full max-w-md p-6 rounded-xl shadow-xl text-white"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+        onClick={(e) => e.stopPropagation()} 
       >
         <button
           onClick={closeModal}
@@ -44,10 +44,10 @@ function SearchModel({ closeModal, result }) {
             <strong>Nationality:</strong> {result.nationality}
           </p>
           <p className="text-sm">
-            <strong>DOB:</strong> {result.dateOfBirth}
+            <strong>DOB:</strong> {formatDate(result.dateOfBirth)}
           </p>
           <p className="text-sm">
-            <strong>Expiry:</strong> {result.expiryDate}
+            <strong>Expiry:</strong> {formatDate(result.expiryDate)}
           </p>
         </div>
       </div>

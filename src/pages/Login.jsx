@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-// Function to generate a random token
-const generateToken = () => {
-  return (
-    Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15)
-  );
-};
+import api from "../api";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -15,44 +8,37 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Hardcoded credentials
-  const HARDCODED_EMAIL = "admin@example.com";
-  const HARDCODED_PASSWORD = "Admin123";
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    
-    if (email === HARDCODED_EMAIL && password === HARDCODED_PASSWORD) {
-      
-
-      const token = generateToken();
-      localStorage.setItem("authToken", token);
-      console.log("Login successful, token:", token);
-     
-      navigate("/dashboard");
-    } else {
-      setError("Invalid email or password");
+    try {
+      const data = await api.login(email, password);
+      if (data?.data?.token) {
+        localStorage.setItem("token", data.data.token);
+        navigate("/dashboard");
+      } else {
+        setError(data.message || "Invalid email or password");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Something went wrong.");
     }
   };
 
   return (
     <div className="flex items-center justify-center px-4">
       <div className="w-full max-w-sm p-6">
-      
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Welcome Back Admin 👋
         </h2>
 
-      
         {error && (
           <div className="text-red-500 text-sm text-center mb-4">{error}</div>
         )}
 
-       
-        <div className="space-y-4">
-         
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Address
@@ -67,7 +53,7 @@ function Login() {
             />
           </div>
 
-       
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -82,7 +68,7 @@ function Login() {
             />
           </div>
 
-       
+          {/* Forgot password link */}
           <div className="flex justify-end text-sm">
             <Link
               to="/forgot-password"
@@ -92,14 +78,14 @@ function Login() {
             </Link>
           </div>
 
-       
+          {/* Submit button */}
           <button
-            onClick={handleSubmit}
-            className="w-full bg-black text-white py-2 rounded-md font-semibold hover:bg-black transition"
+            type="submit"
+            className="w-full bg-black text-white py-2 rounded-md font-semibold hover:bg-gray-800 transition"
           >
             Login
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
