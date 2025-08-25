@@ -1,10 +1,14 @@
 import React from "react";
 import { formatDate } from "../util/Date";
+
 function SearchModel({ closeModal, result }) {
   const flags = {
-    Pakistani: "https://flagcdn.com/w320/pk.png",
+    Pakistan: "https://flagcdn.com/w320/pk.png",
+    India: "https://flagcdn.com/w320/in.png",
     Bangladesh: "https://flagcdn.com/w320/bd.png",
-    SriLanka: "https://flagcdn.com/w320/lk.png",
+    "Sri Lanka": "https://flagcdn.com/w320/lk.png",
+    Philippines: "https://flagcdn.com/w320/ph.png",
+    Nepal: "https://flagcdn.com/w320/np.png",
   };
 
   return (
@@ -12,21 +16,18 @@ function SearchModel({ closeModal, result }) {
       className="fixed inset-0 flex items-center justify-center z-50"
       onClick={closeModal}
     >
-   
       <div className="absolute inset-0">
         <img
           src={flags[result.nationality] || ""}
           alt={result.nationality}
           className="w-full h-full object-cover"
         />
-     
         <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
       </div>
 
-     
       <div
-        className="relative z-10 w-full max-w-md p-6 rounded-xl shadow-xl text-white"
-        onClick={(e) => e.stopPropagation()} 
+        className="relative z-10 w-full max-w-md p-6 rounded-xl shadow-xl text-white bg-black/70"
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={closeModal}
@@ -35,20 +36,24 @@ function SearchModel({ closeModal, result }) {
           ✕
         </button>
 
-        <div className="p-4">
-          <h3 className="text-xl font-bold mb-2">{result.name}</h3>
-          <p className="text-sm">
-            <strong>License No:</strong> {result.licenseNumber}
-          </p>
-          <p className="text-sm">
-            <strong>Nationality:</strong> {result.nationality}
-          </p>
-          <p className="text-sm">
-            <strong>DOB:</strong> {formatDate(result.dateOfBirth)}
-          </p>
-          <p className="text-sm">
-            <strong>Expiry:</strong> {formatDate(result.expiryDate)}
-          </p>
+        <div className="p-4 space-y-3">
+          {[
+            { label: "License Number", value: result.licenseNumber },
+            { label: "Name", value: result.name },
+            { label: "Father Name", value: result.fatherName },
+            { label: "License Type", value: result.licenseType },
+            { label: "Issue Date", value: formatDate(result.issueDate) },
+            { label: "Expiry Date", value: formatDate(result.expiryDate) },
+            { label: "Nationality", value: result.nationality },
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="flex justify-between border-b border-gray-500 pb-1"
+            >
+              <span className="font-medium">{item.label}:</span>
+              <span>{item.value || "N/A"}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

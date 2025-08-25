@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { FaUpload } from "react-icons/fa";
 import api from "../api";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+
 
 function AddNew() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fullName: "",
     parentName: "",
@@ -27,14 +33,14 @@ function AddNew() {
   const [imagePreview, setImagePreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // handle inputs
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" })); // clear field error
+    setErrors((prev) => ({ ...prev, [name]: "" })); 
   };
 
-  // image upload / drag&drop
+
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -56,10 +62,10 @@ function AddNew() {
 
   const handleDragOver = (e) => e.preventDefault();
 
-  // validation
+
   const validateForm = () => {
     const requiredKeys = Object.keys(formData).filter(
-      (k) => k !== "emergencyContact" // optional
+      (k) => k !== "emergencyContact" 
     );
     const newErrors = {};
     requiredKeys.forEach((key) => {
@@ -71,32 +77,54 @@ function AddNew() {
   };
 
   // submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+   e.preventDefault();
 
-    if (!validateForm()) return; // ✅ run validation before submitting
+   if (!validateForm()) return;
 
-    setSubmitting(true);
+   setSubmitting(true);
 
-    try {
-      const data = new FormData(); // <-- use different variable name
-      Object.entries(formData).forEach(([k, v]) => data.append(k, v));
-      if (image) data.append("licenseImage", image);
+   try {
+     const data = new FormData();
+     Object.entries(formData).forEach(([k, v]) => data.append(k, v));
+     if (image) data.append("licenseImage", image);
 
-      const res = await api.submitLicense(data);
-      if (res.success) {
-        alert("Submitted successfully");
-        // optionally reset form here
-      } else {
-        alert(res.message || "Failed to submit");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong while submitting");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+     const res = await api.submitLicense(data);
+     if (res.success) {
+       toast.success("Submitted successfully!");
+       setFormData({
+         fullName: "",
+         parentName: "",
+         dateOfBirth: "",
+         gender: "",
+         nationality: "",
+         address: "",
+         phoneNumber: "",
+         email: "",
+         licenseType: "",
+         placeOfIssue: "",
+         issueDate: "",
+         expiryDate: "",
+         licenseNumber: "",
+         bloodGroup: "",
+         cnicOrIdNumber: "",
+         emergencyContact: "",
+       });
+       setImage(null);
+       setImagePreview(null);
+
+       setTimeout(() => navigate("/dashboard"), 1000); 
+     } else {
+       toast.error(res.message || "Failed to submit");
+     }
+   } catch (err) {
+     console.error(err);
+     toast.error("Something went wrong while submitting");
+   } finally {
+     setSubmitting(false);
+   }
+ };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
@@ -111,9 +139,7 @@ function AddNew() {
 
         <form onSubmit={handleSubmit}>
           <div className="lg:flex lg:flex-row lg:gap-6">
-            {/* LEFT: all form inputs */}
             <div className="flex-1 space-y-4">
-              {/* Full Name */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Full Name*
@@ -131,7 +157,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Parent Name */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Parent Name*
@@ -151,7 +176,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Date of Birth */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Date of Birth*
@@ -170,7 +194,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Gender */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Gender*
@@ -193,19 +216,26 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Nationality */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Nationality*
                 </label>
-                <input
-                  type="text"
+                <select
                   name="nationality"
                   value={formData.nationality}
                   onChange={handleInputChange}
-                  placeholder="Enter nationality"
                   className="border border-black w-full px-3 py-2 rounded-md focus:outline-none focus:border-blue-500 text-[12px]"
-                />
+                >
+                  <option value="" disabled>
+                    Select nationality
+                  </option>
+                  <option value="Pakistan">Pakistan</option>
+                  <option value="India">India</option>
+                  <option value="Bangladesh">Bangladesh</option>
+                  <option value="Sri Lanka">Sri Lanka</option>
+                  <option value="Philippines">Philippines</option>
+                  <option value="Nepal">Nepal</option>
+                </select>
                 {errors.nationality && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.nationality}
@@ -213,7 +243,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Address */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Address*
@@ -231,7 +260,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Phone Number */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Phone Number*
@@ -251,7 +279,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Email */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Email Address*
@@ -269,7 +296,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* License Type */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   License Type*
@@ -296,7 +322,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Place of Issue */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Place of Issue*
@@ -316,7 +341,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* CNIC / ID */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   CNIC/ID Number*
@@ -336,7 +360,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Blood Group */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Blood Group*
@@ -367,7 +390,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Issue / Expiry Dates */}
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="block text-[12px] font-medium text-black mb-1">
@@ -405,7 +427,6 @@ function AddNew() {
                 </div>
               </div>
 
-              {/* License Number */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   License Number*
@@ -425,7 +446,6 @@ function AddNew() {
                 )}
               </div>
 
-              {/* Emergency Contact (optional) */}
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
                   Emergency Contact
@@ -446,7 +466,6 @@ function AddNew() {
               </div>
             </div>
 
-            {/* RIGHT: Image upload */}
             <div className="lg:w-1/3">
               <label className="block text-[12px] font-medium text-black mb-1">
                 License Image*
@@ -520,6 +539,15 @@ function AddNew() {
           </button>
         </form>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
     </div>
   );
 }

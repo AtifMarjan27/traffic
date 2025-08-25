@@ -43,10 +43,10 @@ function AdminSection() {
 
   return (
     <div className="p-6">
-      {/* Header */}
+      
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">
-          License Management
+        <h2 className="text-xl sm:text-2xl font-bold text-blue-700 tracking-tight">
+          Licenses Data
         </h2>
         <button
           onClick={() => navigate("/newEntry")}
@@ -56,24 +56,24 @@ function AdminSection() {
         </button>
       </div>
 
-      {/* Table (Always visible, white background) */}
+   
       <div className="overflow-x-auto bg-white rounded-xl shadow-lg border border-gray-200">
         {loading ? (
           <Loader />
         ) : data.length > 0 ? (
           <table className="w-full border-collapse text-[12px]">
-            {/* Table Head */}
+          
             <thead className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 sticky top-0 z-10">
               <tr>
                 {[
                   "Avatar",
                   "Name",
-                  "Parent",
+                  "FatherName",
                   "DOB",
                   "Gender",
                   "Nationality",
                   "Phone",
-                  "Email",
+                  "Address",
                   "License No",
                   "Issue Date",
                   "Expiry",
@@ -89,7 +89,7 @@ function AdminSection() {
               </tr>
             </thead>
 
-            {/* Table Body */}
+       
             <tbody>
               {data.map((item, idx) => (
                 <tr
@@ -106,7 +106,7 @@ function AdminSection() {
                     />
                   </td>
                   <td className="px-4 py-3 border-b font-semibold text-gray-800 text-[12px]">
-                    {item.name}
+                    {item.fullName}
                   </td>
                   <td className="px-4 py-3 border-b font-semibold text-[12px]">
                     {item.parentName}
@@ -124,7 +124,7 @@ function AdminSection() {
                     {item.phoneNumber}
                   </td>
                   <td className="px-4 py-3 border-b truncate max-w-[180px] font-semibold text-[12px]">
-                    {item.email}
+                    {item.address}
                   </td>
                   <td className="px-4 py-3 border-b font-semibold text-[12px]">
                     {item.licenseNumber}

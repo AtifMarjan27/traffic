@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { FaUpload } from "react-icons/fa";
 import api from "../api";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function EditLicense() {
   const { id } = useParams();
@@ -33,14 +36,13 @@ function EditLicense() {
   const [imagePreview, setImagePreview] = useState(state?.licenseImage || null);
   const [submitting, setSubmitting] = useState(false);
 
-  // handle inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // image upload / drag&drop
+
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -62,38 +64,39 @@ function EditLicense() {
 
   const handleDragOver = (e) => e.preventDefault();
 
-  // submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
 
-    try {
-      let dataToSend;
-      let isForm = false;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setSubmitting(true);
 
-      if (image) {
-        dataToSend = new FormData();
-        Object.entries(formData).forEach(([k, v]) => dataToSend.append(k, v));
-        dataToSend.append("licenseImage", image);
-        isForm = true;
-      } else {
-        dataToSend = { ...formData };
-      }
+  try {
+    let dataToSend;
+    let isForm = false;
 
-      const res = await api.updateLicense(id, dataToSend, isForm);
-      if (res.success) {
-        alert("License updated successfully");
-        navigate("/dashboard");
-      } else {
-        alert(res.message || "Failed to update");
-      }
-    } catch (err) {
-      console.error("Error updating license:", err);
-      alert("Something went wrong while updating");
-    } finally {
-      setSubmitting(false);
+    if (image) {
+      dataToSend = new FormData();
+      Object.entries(formData).forEach(([k, v]) => dataToSend.append(k, v));
+      dataToSend.append("licenseImage", image);
+      isForm = true;
+    } else {
+      dataToSend = { ...formData };
     }
-  };
+
+    const res = await api.updateLicense(id, dataToSend, isForm);
+    if (res.success) {
+      toast.success("License updated successfully!");
+      setTimeout(() => navigate("/dashboard"), 2000); // Redirect after 2s
+    } else {
+      toast.error(res.message || "Failed to update license");
+    }
+  } catch (err) {
+    console.error("Error updating license:", err);
+    toast.error("Something went wrong while updating");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
@@ -104,7 +107,7 @@ function EditLicense() {
 
         <form onSubmit={handleSubmit}>
           <div className="lg:flex lg:flex-row lg:gap-6">
-            {/* LEFT: all form inputs */}
+          
             <div className="flex-1 space-y-4">
               {[
                 { name: "fullName", label: "Full Name" },
@@ -148,7 +151,7 @@ function EditLicense() {
               ))}
             </div>
 
-            {/* RIGHT: Image upload */}
+         
             <div className="lg:w-1/3">
               <label className="block text-[12px] font-medium text-black mb-1">
                 License Image
@@ -219,6 +222,15 @@ function EditLicense() {
           </button>
         </form>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
     </div>
   );
 }

@@ -15,7 +15,7 @@ function Home() {
     inputRef.current.focus();
   }, []);
 
-  // Handle Search
+
   const handleSearch = async () => {
     if (!searchValue.trim()) return;
 
@@ -79,7 +79,7 @@ function Home() {
         <p className="mt-4 text-red-600 font-medium text-lg">No data found.</p>
       )}
 
-      {/* Modal for Search Result */}
+    
       {result && <SearchModel result={result} closeModal={closeModal} />}
 
       {/* Features Section */}
@@ -95,7 +95,7 @@ function Home() {
         </p>
       </div>
 
-      {/* Cards Section */}
+  
       <div className="w-full mt-10">
         <Cards />
       </div>

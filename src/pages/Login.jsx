@@ -1,28 +1,35 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import api from "../api";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setSubmitting(true);
 
     try {
       const data = await api.login(email, password);
       if (data?.data?.token) {
         localStorage.setItem("token", data.data.token);
-        navigate("/dashboard");
+        toast.success("Login successful! Redirecting...");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
       } else {
-        setError(data.message || "Invalid email or password");
+        toast.error(data.message || "Invalid email or password");
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError("Something went wrong.");
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -33,12 +40,8 @@ function Login() {
           Welcome Back Admin 👋
         </h2>
 
-        {error && (
-          <div className="text-red-500 text-sm text-center mb-4">{error}</div>
-        )}
-
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email */}
+       
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Address
@@ -53,7 +56,7 @@ function Login() {
             />
           </div>
 
-          {/* Password */}
+      
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -68,24 +71,30 @@ function Login() {
             />
           </div>
 
-          {/* Forgot password link */}
-          <div className="flex justify-end text-sm">
-            <Link
-              to="/forgot-password"
-              className="text-black hover:underline font-medium"
-            >
-              Forgot Password?
-            </Link>
-          </div>
+        
 
-          {/* Submit button */}
+       
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded-md font-semibold hover:bg-gray-800 transition"
+            disabled={submitting}
+            className={`w-full text-white py-2 rounded-md font-semibold transition ${
+              submitting ? "bg-gray-500" : "bg-black hover:bg-gray-800"
+            }`}
           >
-            Login
+            {submitting ? "Logging in..." : "Login"}
           </button>
         </form>
+
+       
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          draggable
+        />
       </div>
     </div>
   );
