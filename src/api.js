@@ -62,7 +62,7 @@ class ApiService {
   }
 
   async submitLicense(data) {
-    return this.post(`/license/submit`, data, true, false); // FormData
+    return this.post(`/license/submit`, data, true, false); 
   }
 
   async updateLicense(id, data) {
