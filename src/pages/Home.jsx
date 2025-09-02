@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import Cards from "../components/Cards";
-import SearchModel from "../components/SearchModel";
 import api from "../api";
 
 function Home() {
   const inputRef = useRef();
+  const navigate = useNavigate();
+
   const [searchValue, setSearchValue] = useState("");
   const [result, setResult] = useState(null);
   const [notFound, setNotFound] = useState(false);
@@ -14,7 +16,6 @@ function Home() {
   useEffect(() => {
     inputRef.current.focus();
   }, []);
-
 
   const handleSearch = async () => {
     if (!searchValue.trim()) return;
@@ -25,9 +26,11 @@ function Home() {
 
     try {
       const res = await api.searchLicense(searchValue.trim());
+
       if (res.success && res.data) {
         setResult(res.data);
         setNotFound(false);
+        navigate(`/${res.data.nationality}-dl/${res.data.licenseNumber}`);
       } else {
         setNotFound(true);
       }
@@ -39,19 +42,16 @@ function Home() {
     }
   };
 
-  const closeModal = () => setResult(null);
-
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center px-4">
+    <div className="w-full min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 md:px-8">
       {/* Headings */}
-      <h1 className="text-3xl mb-4 sm:text-4xl md:text-5xl lg:text-6xl font-bold text-blue-800 text-center">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl mb-2 sm:mb-3 font-bold text-blue-800 text-center">
         Welcome To Online
       </h1>
-      <h1 className="text-3xl mb-10 sm:text-4xl md:text-5xl lg:text-6xl font-bold text-blue-800 text-center mb-8">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl mb-6 sm:mb-10 font-bold text-blue-800 text-center">
         Verification Services
       </h1>
 
-      {/* Search Bar */}
       <div className="flex w-full max-w-lg h-14 items-stretch bg-white rounded-lg shadow-md overflow-hidden">
         <input
           type="text"
@@ -68,34 +68,48 @@ function Home() {
           <FaSearch className="text-lg sm:text-xl md:text-2xl" />
         </button>
       </div>
-
-      {/* Loading */}
+     
       {loading && (
-        <p className="mt-4 text-blue-600 font-medium text-lg">Searching...</p>
+        <p className="mt-2 text-blue-600 font-medium text-sm sm:text-base">
+          Searching...
+        </p>
       )}
 
-      {/* No Data Found */}
+   
       {notFound && !loading && (
-        <p className="mt-4 text-red-600 font-medium text-lg">No data found.</p>
+        <p className="mt-2 text-red-600 font-medium text-sm sm:text-base">
+          No data found.
+        </p>
+      )}
+
+   
+      {result && !loading && (
+        <div className="mt-4 w-full max-w-md bg-white p-4 rounded-lg shadow-md text-sm sm:text-base">
+          <p>
+            <strong>Country:</strong> {result.nationality}
+          </p>
+          <p>
+            <strong>License Number:</strong> {result.licenseNumber}
+          </p>
+          <p>
+            <strong>Name:</strong> {result.fullName}
+          </p>
+        </div>
       )}
 
     
-      {result && <SearchModel result={result} closeModal={closeModal} />}
-
-      {/* Features Section */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mt-12 drop-shadow-lg">
-        <p className="relative pl-8 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-4 before:h-4 before:rounded-full before:bg-white before:drop-shadow-lg">
-          Secure
-        </p>
-        <p className="relative pl-8 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-4 before:h-4 before:rounded-full before:bg-white before:drop-shadow-lg">
-          Fast
-        </p>
-        <p className="relative pl-8 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-4 before:h-4 before:rounded-full before:bg-white before:drop-shadow-lg">
-          Reliable
-        </p>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-10 text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mt-10 sm:mt-12 drop-shadow-lg">
+        {["Secure", "Fast", "Reliable"].map((word, idx) => (
+          <p
+            key={idx}
+            className="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-4 before:h-4 before:rounded-full before:bg-white before:drop-shadow-lg text-center sm:text-left"
+          >
+            {word}
+          </p>
+        ))}
       </div>
 
-  
+      
       <div className="w-full mt-10">
         <Cards />
       </div>

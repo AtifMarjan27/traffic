@@ -5,7 +5,6 @@ import api from "../api";
 import { DataContext } from "../context/DataContext";
 import { formatDate } from "../util/Date";
 
-// 🔹 Custom Loader
 function Loader() {
   return (
     <div className="flex justify-center items-center py-10">
@@ -18,6 +17,7 @@ function Loader() {
 function AdminSection() {
   const { data, setData } = useContext(DataContext);
   const [loading, setLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState(null); // For modal
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -32,9 +32,15 @@ function AdminSection() {
     }
   };
 
-  const handleDelete = async (id) => {
-    await api.deleteLicense(id);
-    setData((prev) => prev.filter((item) => item._id !== id));
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+    try {
+      await api.deleteLicense(deleteId);
+      setData((prev) => prev.filter((item) => item._id !== deleteId));
+      setDeleteId(null);
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
   };
 
   useEffect(() => {
@@ -43,7 +49,6 @@ function AdminSection() {
 
   return (
     <div className="p-6">
-      
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <h2 className="text-xl sm:text-2xl font-bold text-blue-700 tracking-tight">
           Licenses Data
@@ -56,13 +61,11 @@ function AdminSection() {
         </button>
       </div>
 
-   
       <div className="overflow-x-auto bg-white rounded-xl shadow-lg border border-gray-200">
         {loading ? (
           <Loader />
         ) : data.length > 0 ? (
           <table className="w-full border-collapse text-[12px]">
-          
             <thead className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 sticky top-0 z-10">
               <tr>
                 {[
@@ -89,7 +92,6 @@ function AdminSection() {
               </tr>
             </thead>
 
-       
             <tbody>
               {data.map((item, idx) => (
                 <tr
@@ -135,9 +137,9 @@ function AdminSection() {
                   <td className="px-4 py-3 border-b font-semibold text-[12px]">
                     {formatDate(item.expiryDate)}
                   </td>
-                  <td className="px-4 py-3 border-b text-center ">
+                  <td className="px-4 py-3 border-b text-center">
                     <button
-                      onClick={() => handleDelete(item._id)}
+                      onClick={() => setDeleteId(item._id)}
                       className="p-2 rounded-full text-red-600 hover:bg-red-100 hover:text-red-700 transition"
                       title="Delete Entry"
                     >
@@ -163,6 +165,32 @@ function AdminSection() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteId && (
+        <div className="fixed inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] text-center">
+            <h3 className="text-lg font-semibold mb-4">Confirm Delete</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this license?
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+              >
+                Yes, Delete
+              </button>
+              <button
+                onClick={() => setDeleteId(null)}
+                className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

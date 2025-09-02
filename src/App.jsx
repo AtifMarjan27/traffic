@@ -11,7 +11,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AdminSection from "./pages/AdminSection";
 import AddNew from "./pages/AddNew";
-import EditLicense from "./pages/EditLicense"; // ✅ import new page
+import EditLicense from "./pages/EditLicense";
+import LicensePage from "./pages/LicensePage";
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -54,6 +55,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <EditLicense />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/:country-dl/:licenseNumber"
+              element={
+                <ProtectedRoute>
+                  <LicensePage />
                 </ProtectedRoute>
               }
             />

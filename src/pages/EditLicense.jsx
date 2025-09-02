@@ -5,17 +5,23 @@ import api from "../api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 function EditLicense() {
   const { id } = useParams();
-  const { state } = useLocation(); 
+  const { state } = useLocation();
   const navigate = useNavigate();
 
- 
+  // ✅ Function to format date to YYYY-MM-DD for input
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date)) return "";
+    return date.toISOString().split("T")[0];
+  };
+
   const [formData, setFormData] = useState({
     fullName: state?.fullName || "",
     parentName: state?.parentName || "",
-    dateOfBirth: state?.dateOfBirth || "",
+    dateOfBirth: formatDate(state?.dateOfBirth), // ✅ formatted
     gender: state?.gender || "",
     nationality: state?.nationality || "",
     address: state?.address || "",
@@ -23,8 +29,8 @@ function EditLicense() {
     email: state?.email || "",
     licenseType: state?.licenseType || "",
     placeOfIssue: state?.placeOfIssue || "",
-    issueDate: state?.issueDate || "",
-    expiryDate: state?.expiryDate || "",
+    issueDate: formatDate(state?.issueDate), // ✅ formatted
+    expiryDate: formatDate(state?.expiryDate), // ✅ formatted
     licenseNumber: state?.licenseNumber || "",
     bloodGroup: state?.bloodGroup || "",
     cnicOrIdNumber: state?.cnicOrIdNumber || "",
@@ -41,7 +47,6 @@ function EditLicense() {
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
-
 
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
@@ -64,39 +69,36 @@ function EditLicense() {
 
   const handleDragOver = (e) => e.preventDefault();
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setSubmitting(true);
+    try {
+      const formDataToSend = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataToSend.append(key, value ?? "");
+      });
 
-  try {
-    let dataToSend;
-    let isForm = false;
+      // Always append image if available
+      if (image) {
+        formDataToSend.append("licenseImage", image);
+      }
 
-    if (image) {
-      dataToSend = new FormData();
-      Object.entries(formData).forEach(([k, v]) => dataToSend.append(k, v));
-      dataToSend.append("licenseImage", image);
-      isForm = true;
-    } else {
-      dataToSend = { ...formData };
+      const res = await api.updateLicense(id, formDataToSend, true, false);
+
+      if (res.success || res.message === "License updated successfully") {
+        toast.success("License updated successfully!");
+        setTimeout(() => navigate("/dashboard"), 2000);
+      } else {
+        toast.error(res.message || "Failed to update license");
+      }
+    } catch (err) {
+      console.error("Error updating license:", err);
+      toast.error("Something went wrong while updating");
+    } finally {
+      setSubmitting(false);
     }
-
-    const res = await api.updateLicense(id, dataToSend, isForm);
-    if (res.success) {
-      toast.success("License updated successfully!");
-      setTimeout(() => navigate("/dashboard"), 2000); // Redirect after 2s
-    } else {
-      toast.error(res.message || "Failed to update license");
-    }
-  } catch (err) {
-    console.error("Error updating license:", err);
-    toast.error("Something went wrong while updating");
-  } finally {
-    setSubmitting(false);
-  }
-};
-
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
@@ -107,7 +109,6 @@ const handleSubmit = async (e) => {
 
         <form onSubmit={handleSubmit}>
           <div className="lg:flex lg:flex-row lg:gap-6">
-          
             <div className="flex-1 space-y-4">
               {[
                 { name: "fullName", label: "Full Name" },
@@ -151,7 +152,6 @@ const handleSubmit = async (e) => {
               ))}
             </div>
 
-         
             <div className="lg:w-1/3">
               <label className="block text-[12px] font-medium text-black mb-1">
                 License Image

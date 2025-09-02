@@ -89,7 +89,7 @@ function AddNew() {
      Object.entries(formData).forEach(([k, v]) => data.append(k, v));
      if (image) data.append("licenseImage", image);
 
-     const res = await api.submitLicense(data);
+     const res = await api.createLicense(data);
      if (res.success) {
        toast.success("Submitted successfully!");
        setFormData({
@@ -232,7 +232,7 @@ function AddNew() {
                   <option value="Pakistan">Pakistan</option>
                   <option value="India">India</option>
                   <option value="Bangladesh">Bangladesh</option>
-                  <option value="Sri Lanka">Sri Lanka</option>
+                  <option value="SriLanka">SriLanka</option>
                   <option value="Philippines">Philippines</option>
                   <option value="Nepal">Nepal</option>
                 </select>
