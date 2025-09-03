@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import api from "../api";
+import { formatDate } from "../util/Date";
 
-// Import country images
 import indiaImg from "../assets/indi1.webp";
 import banglshImg from "../assets/Ban1.webp";
 import Srilanka from "../assets/Sri1webp.webp";
@@ -84,7 +84,7 @@ function LicensePage() {
 
   return (
     <div className="p-4 sm:p-6 max-w-4xl mx-auto w-full">
-      {/* Display country image and native language label */}
+    
       {result && result.nationality && countryInfo[result.nationality] && (
         <div className="mb-4 w-full">
           <img
@@ -98,7 +98,7 @@ function LicensePage() {
         </div>
       )}
 
-      {/* Search Input */}
+    
       <div className="flex w-full bg-white rounded-lg shadow-md overflow-hidden">
         <input
           type="text"
@@ -116,34 +116,34 @@ function LicensePage() {
         </button>
       </div>
 
-      {/* Loading */}
+    
       {loading && (
         <p className="mt-4 text-blue-600 font-medium">Searching...</p>
       )}
 
-      {/* No Data Found */}
+    
       {notFound && !loading && (
         <p className="mt-4 text-red-600 font-medium">No data found.</p>
       )}
 
-      {/* License Result */}
+     
       {result && !loading && (
         <div className="mt-4 w-full bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
-          {/* License Header */}
+       
           <div className="flex items-center justify-center text-sm font-bold px-4 py-2 border-b border-gray-300 bg-gray-200 text-black">
             License Number: {result.licenseNumber}
           </div>
 
-          {/* License Info */}
+       
           <div className="divide-y sm:divide-y-0 sm:divide-x border-t border-gray-300">
-            {/* For each field, render a row */}
+          
             {[
               ["Name", result.fullName],
               ["Father Name", result.parentName],
-              ["Date of Birth", result.dateOfBirth],
-              ["First Issue", result.issueDate],
-              ["Issue / Renewal", result.issueDate],
-              ["Validity", result.expiryDate],
+              ["Date of Birth",formatDate(result.dateOfBirth)],
+              ["First Issue",formatDate(result.issueDate)],
+              ["Issue / Renewal", formatDate(result.issueDate)],
+              ["Validity",formatDate(result.expiryDate)],
               ["Category", result.licenseType],
             ].map(([label, value], idx) => (
               <div
@@ -157,7 +157,7 @@ function LicensePage() {
                   {label}
                 </div>
 
-                {/* Value */}
+             
                 <div className="px-4 py-2 sm:w-1/2 text-sm sm:text-base text-black">
                   {value}
                 </div>
