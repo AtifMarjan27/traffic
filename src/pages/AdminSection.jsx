@@ -75,8 +75,7 @@ function AdminSection() {
                   "DOB",
                   "Gender",
                   "Nationality",
-                  "Phone",
-                  "Address",
+                 
                   "License No",
                   "Issue Date",
                   "Expiry",
@@ -122,12 +121,7 @@ function AdminSection() {
                   <td className="px-4 py-3 border-b font-semibold text-[12px]">
                     {item.nationality}
                   </td>
-                  <td className="px-4 py-3 border-b font-semibold text-[12px]">
-                    {item.phoneNumber}
-                  </td>
-                  <td className="px-4 py-3 border-b truncate max-w-[180px] font-semibold text-[12px]">
-                    {item.address}
-                  </td>
+                 
                   <td className="px-4 py-3 border-b font-semibold text-[12px]">
                     {item.licenseNumber}
                   </td>

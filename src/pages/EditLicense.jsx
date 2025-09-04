@@ -24,17 +24,15 @@ function EditLicense() {
     dateOfBirth: formatDate(state?.dateOfBirth), // ✅ formatted
     gender: state?.gender || "",
     nationality: state?.nationality || "",
-    address: state?.address || "",
-    phoneNumber: state?.phoneNumber || "",
-    email: state?.email || "",
+   
     licenseType: state?.licenseType || "",
-    placeOfIssue: state?.placeOfIssue || "",
+  
     issueDate: formatDate(state?.issueDate), // ✅ formatted
     expiryDate: formatDate(state?.expiryDate), // ✅ formatted
     licenseNumber: state?.licenseNumber || "",
     bloodGroup: state?.bloodGroup || "",
     cnicOrIdNumber: state?.cnicOrIdNumber || "",
-    emergencyContact: state?.emergencyContact || "",
+  
   });
 
   const [errors, setErrors] = useState({});
@@ -116,20 +114,15 @@ function EditLicense() {
                 { name: "dateOfBirth", label: "Date of Birth", type: "date" },
                 { name: "gender", label: "Gender" },
                 { name: "nationality", label: "Nationality" },
-                { name: "address", label: "Address" },
-                { name: "phoneNumber", label: "Phone Number" },
-                { name: "email", label: "Email Address", type: "email" },
+                
                 { name: "licenseType", label: "License Type" },
-                { name: "placeOfIssue", label: "Place of Issue" },
+             
                 { name: "cnicOrIdNumber", label: "CNIC/ID Number" },
                 { name: "bloodGroup", label: "Blood Group" },
                 { name: "licenseNumber", label: "License Number" },
                 { name: "issueDate", label: "Issue Date", type: "date" },
                 { name: "expiryDate", label: "Expiry Date", type: "date" },
-                {
-                  name: "emergencyContact",
-                  label: "Emergency Contact (optional)",
-                },
+               
               ].map((field) => (
                 <div key={field.name}>
                   <label className="block text-[12px] font-medium text-black mb-1">

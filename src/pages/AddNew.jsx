@@ -15,17 +15,15 @@ function AddNew() {
     dateOfBirth: "",
     gender: "",
     nationality: "",
-    address: "",
-    phoneNumber: "",
-    email: "",
+   
     licenseType: "",
-    placeOfIssue: "",
+  
     issueDate: "",
     expiryDate: "",
     licenseNumber: "",
     bloodGroup: "",
     cnicOrIdNumber: "",
-    emergencyContact: "",
+  
   });
 
   const [errors, setErrors] = useState({});
@@ -98,17 +96,15 @@ function AddNew() {
          dateOfBirth: "",
          gender: "",
          nationality: "",
-         address: "",
-         phoneNumber: "",
-         email: "",
+        
          licenseType: "",
-         placeOfIssue: "",
+       
          issueDate: "",
          expiryDate: "",
          licenseNumber: "",
          bloodGroup: "",
          cnicOrIdNumber: "",
-         emergencyContact: "",
+        
        });
        setImage(null);
        setImagePreview(null);
@@ -243,58 +239,6 @@ function AddNew() {
                 )}
               </div>
 
-              <div>
-                <label className="block text-[12px] font-medium text-black mb-1">
-                  Address*
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  placeholder="Enter full address"
-                  className="border border-black w-full px-3 py-2 rounded-md focus:outline-none focus:border-blue-500 text-[12px]"
-                />
-                {errors.address && (
-                  <p className="text-red-500 text-xs mt-1">{errors.address}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-[12px] font-medium text-black mb-1">
-                  Phone Number*
-                </label>
-                <input
-                  type="text"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  placeholder="Enter phone number"
-                  className="border border-black w-full px-3 py-2 rounded-md focus:outline-none focus:border-blue-500 text-[12px]"
-                />
-                {errors.phoneNumber && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.phoneNumber}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-[12px] font-medium text-black mb-1">
-                  Email Address*
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="Enter email address"
-                  className="border border-black w-full px-3 py-2 rounded-md focus:outline-none focus:border-blue-500 text-[12px]"
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                )}
-              </div>
 
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
@@ -322,24 +266,7 @@ function AddNew() {
                 )}
               </div>
 
-              <div>
-                <label className="block text-[12px] font-medium text-black mb-1">
-                  Place of Issue*
-                </label>
-                <input
-                  type="text"
-                  name="placeOfIssue"
-                  value={formData.placeOfIssue}
-                  onChange={handleInputChange}
-                  placeholder="Enter place of issue"
-                  className="border border-black w-full px-3 py-2 rounded-md focus:outline-none focus:border-blue-500 text-[12px]"
-                />
-                {errors.placeOfIssue && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.placeOfIssue}
-                  </p>
-                )}
-              </div>
+            
 
               <div>
                 <label className="block text-[12px] font-medium text-black mb-1">
@@ -446,24 +373,7 @@ function AddNew() {
                 )}
               </div>
 
-              <div>
-                <label className="block text-[12px] font-medium text-black mb-1">
-                  Emergency Contact
-                </label>
-                <input
-                  type="text"
-                  name="emergencyContact"
-                  value={formData.emergencyContact}
-                  onChange={handleInputChange}
-                  placeholder="Enter emergency contact number"
-                  className="border border-black w-full px-3 py-2 rounded-md focus:outline-none focus:border-blue-500 text-[12px]"
-                />
-                {errors.emergencyContact && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.emergencyContact}
-                  </p>
-                )}
-              </div>
+            
             </div>
 
             <div className="lg:w-1/3">
