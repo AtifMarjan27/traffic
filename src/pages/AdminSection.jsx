@@ -69,7 +69,7 @@ function AdminSection() {
             <thead className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 sticky top-0 z-10">
               <tr>
                 {[
-                  "Avatar",
+                 
                   "Name",
                   "FatherName",
                   "DOB",
@@ -99,13 +99,6 @@ function AdminSection() {
                     idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                   } hover:bg-blue-50`}
                 >
-                  <td className="px-4 py-3 border-b text-center">
-                    <img
-                      src={item.licenseImage}
-                      alt="avatar"
-                      className="w-10 h-10 mx-auto rounded-full object-cover shadow-sm border"
-                    />
-                  </td>
                   <td className="px-4 py-3 border-b font-semibold text-gray-800 text-[12px]">
                     {item.fullName}
                   </td>

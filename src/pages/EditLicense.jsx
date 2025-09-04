@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { FaUpload } from "react-icons/fa";
 import api from "../api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,7 +9,6 @@ function EditLicense() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  // ✅ Function to format date to YYYY-MM-DD for input
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -21,23 +19,18 @@ function EditLicense() {
   const [formData, setFormData] = useState({
     fullName: state?.fullName || "",
     parentName: state?.parentName || "",
-    dateOfBirth: formatDate(state?.dateOfBirth), // ✅ formatted
+    dateOfBirth: formatDate(state?.dateOfBirth),
     gender: state?.gender || "",
     nationality: state?.nationality || "",
-   
     licenseType: state?.licenseType || "",
-  
-    issueDate: formatDate(state?.issueDate), // ✅ formatted
-    expiryDate: formatDate(state?.expiryDate), // ✅ formatted
+    issueDate: formatDate(state?.issueDate),
+    expiryDate: formatDate(state?.expiryDate),
     licenseNumber: state?.licenseNumber || "",
     bloodGroup: state?.bloodGroup || "",
     cnicOrIdNumber: state?.cnicOrIdNumber || "",
-  
   });
 
   const [errors, setErrors] = useState({});
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(state?.licenseImage || null);
   const [submitting, setSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
@@ -45,27 +38,6 @@ function EditLicense() {
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
-      setErrors((prev) => ({ ...prev, image: "" }));
-    }
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
-      setErrors((prev) => ({ ...prev, image: "" }));
-    }
-  };
-
-  const handleDragOver = (e) => e.preventDefault();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -76,11 +48,6 @@ function EditLicense() {
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value ?? "");
       });
-
-      // Always append image if available
-      if (image) {
-        formDataToSend.append("licenseImage", image);
-      }
 
       const res = await api.updateLicense(id, formDataToSend, true, false);
 
@@ -114,15 +81,12 @@ function EditLicense() {
                 { name: "dateOfBirth", label: "Date of Birth", type: "date" },
                 { name: "gender", label: "Gender" },
                 { name: "nationality", label: "Nationality" },
-                
                 { name: "licenseType", label: "License Type" },
-             
                 { name: "cnicOrIdNumber", label: "CNIC/ID Number" },
                 { name: "bloodGroup", label: "Blood Group" },
                 { name: "licenseNumber", label: "License Number" },
                 { name: "issueDate", label: "Issue Date", type: "date" },
                 { name: "expiryDate", label: "Expiry Date", type: "date" },
-               
               ].map((field) => (
                 <div key={field.name}>
                   <label className="block text-[12px] font-medium text-black mb-1">
@@ -144,64 +108,6 @@ function EditLicense() {
                 </div>
               ))}
             </div>
-
-            <div className="lg:w-1/3">
-              <label className="block text-[12px] font-medium text-black mb-1">
-                License Image
-              </label>
-              <div
-                className="border-dotted border-2 border-gray-400 rounded-md p-4 flex items-center justify-center bg-gray-50 hover:bg-gray-100 transition relative h-40"
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-              >
-                {imagePreview ? (
-                  <div className="relative w-full h-full">
-                    <img
-                      src={imagePreview}
-                      alt="License Preview"
-                      className="w-full h-full object-cover rounded-md"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                      <label
-                        htmlFor="imageUpload"
-                        className="cursor-pointer text-sm bg-gray-200 px-3 py-1 rounded"
-                      >
-                        Change Image
-                      </label>
-                    </div>
-                  </div>
-                ) : (
-                  <label
-                    htmlFor="imageUpload"
-                    className="cursor-pointer text-gray-600 text-sm flex flex-col items-center justify-center h-full"
-                  >
-                    <FaUpload className="text-xl mb-2" />
-                    Drag & drop or click to upload
-                  </label>
-                )}
-                <input
-                  id="imageUpload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-              </div>
-
-              <div className="bg-gray-200 p-4 rounded-2xl mt-5">
-                <h3 className="text-[12px] font-semibold mb-2">
-                  Photo requirements
-                </h3>
-                <p className="text-[12px] text-gray-600">• Recent photo</p>
-                <p className="text-[12px] text-gray-600">
-                  • Clear, front-facing view
-                </p>
-                <p className="text-[12px] text-gray-600">• Plain background</p>
-                <p className="text-[12px] text-gray-600">
-                  • No hats or sunglasses
-                </p>
-              </div>
-            </div>
           </div>
 
           <button
@@ -215,6 +121,7 @@ function EditLicense() {
           </button>
         </form>
       </div>
+
       <ToastContainer
         position="top-right"
         autoClose={3000}
