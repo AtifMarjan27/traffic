@@ -33,7 +33,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
 
-            {/* ✅ Protected Routes */}
+         
             <Route
               path="/dashboard"
               element={
@@ -51,7 +51,7 @@ function App() {
               }
             />
             <Route
-              path="/edit/:id" // ✅ Add Edit License route
+              path="/edit/:id" 
               element={
                 <ProtectedRoute>
                   <EditLicense />

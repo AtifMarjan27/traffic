@@ -78,7 +78,7 @@ class ApiService {
     return this.delete(`/license/${id}`);
   }
 
-  // LICENSE SEARCH
+
   async searchLicense(query) {
     return this.get(`/license/search/${query}`, true);
   }

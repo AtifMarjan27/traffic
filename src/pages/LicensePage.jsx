@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import api from "../api";
 import { formatDate } from "../util/Date";
 
-// Country images and logo
+
 import indiaImg from "../assets/indi1.webp";
 import banglshImg from "../assets/Ban1.webp";
 import Srilanka from "../assets/Sri1webp.webp";
@@ -107,10 +107,10 @@ function LicensePage() {
 
   return (
     <div className="p-4 sm:p-6 max-w-4xl mx-auto w-full">
-      {/* Country image and label */}
+    
       {result && result.nationality && countryInfo[result.nationality] && (
         <div className="mb-4 w-full flex flex-col items-center">
-          {/* Show logo only for Pakistan */}
+        
           {result.nationality === "Pakistan" && (
             <img src={logo} alt="Logo" className="w-100 h-auto mb-2" />
           )}
@@ -127,7 +127,7 @@ function LicensePage() {
         </div>
       )}
 
-      {/* Search input */}
+    
       <div className="flex w-full bg-white rounded-lg shadow-md overflow-hidden">
         <input
           type="text"
@@ -145,7 +145,7 @@ function LicensePage() {
         </button>
       </div>
 
-      {/* Loading / Not Found */}
+    
       {loading && (
         <p className="mt-4 text-blue-600 font-medium">Searching...</p>
       )}
@@ -153,7 +153,7 @@ function LicensePage() {
         <p className="mt-4 text-red-600 font-medium">No data found.</p>
       )}
 
-      {/* Result Data */}
+    
       {result && !loading && (
         <div className="mt-4 w-full bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
           <div className="flex items-center justify-center text-sm font-bold px-4 py-2 border-b border-gray-300 bg-gray-200 text-black">
