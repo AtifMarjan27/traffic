@@ -39,17 +39,24 @@ function EditLicense() {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    Object.keys(formData).forEach((key) => {
+      if (!formData[key]) newErrors[key] = "This field is required";
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     setSubmitting(true);
 
     try {
-      const formDataToSend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value ?? "");
-      });
-
-      const res = await api.updateLicense(id, formDataToSend, true, false);
+  
+      const res = await api.updateLicense(id, formData); 
 
       if (res.success || res.message === "License updated successfully") {
         toast.success("License updated successfully!");

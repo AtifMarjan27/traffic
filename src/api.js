@@ -15,18 +15,11 @@ class ApiService {
 
   async request(endpoint, options) {
     const res = await fetch(`${this.baseUrl}${endpoint}`, options);
+    const json = await res.json().catch(() => ({}));
     if (!res.ok) {
-      const error = await res.json().catch(() => ({}));
-      throw new Error(error.message || "API request failed");
+      throw new Error(json.message || "API request failed");
     }
-    return res.json();
-  }
-
-  get(endpoint, auth = true) {
-    return this.request(endpoint, {
-      method: "GET",
-      headers: this.getHeaders(auth),
-    });
+    return json;
   }
 
   post(endpoint, data, auth = true, isJson = true) {
@@ -35,6 +28,36 @@ class ApiService {
       headers: this.getHeaders(auth, isJson),
       body: isJson ? JSON.stringify(data) : data,
     });
+  }
+
+
+  async createLicense(data) {
+    return this.post("/license", data, true, true);
+  }
+
+
+  async login(email, password) {
+    return this.post("/admin/login", { email, password }, false);
+  }
+
+  async getLicenses() {
+    return this.get("/license");
+  }
+
+  async getLicense(id) {
+    return this.get(`/license/${id}`);
+  }
+
+  async updateLicense(id, data) {
+    return this.put(`/license/${id}`, data, true, true); 
+  }
+
+  async deleteLicense(id) {
+    return this.delete(`/license/${id}`);
+  }
+
+  async searchLicense(query) {
+    return this.get(`/license/search/${query}`);
   }
 
   put(endpoint, data, auth = true, isJson = true) {
@@ -52,35 +75,11 @@ class ApiService {
     });
   }
 
-  // LOGIN
-  async login(email, password) {
-    return this.post("/admin/login", { email, password }, false);
-  }
-
-  // LICENSE APIs
-  async getLicenses() {
-    return this.get("/license");
-  }
-
-  async getLicense(id) {
-    return this.get(`/license/${id}`);
-  }
-
-  async createLicense(data) {
-    return this.post("/license", data, true, false);
-  }
-
-  async updateLicense(id, data) {
-    return this.put(`/license/${id}`, data, true, false);
-  }
-
-  async deleteLicense(id) {
-    return this.delete(`/license/${id}`);
-  }
-
-
-  async searchLicense(query) {
-    return this.get(`/license/search/${query}`, true);
+  get(endpoint, auth = true) {
+    return this.request(endpoint, {
+      method: "GET",
+      headers: this.getHeaders(auth),
+    });
   }
 }
 

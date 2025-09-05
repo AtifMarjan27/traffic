@@ -46,10 +46,9 @@ function AddNew() {
     setSubmitting(true);
 
     try {
-      const data = new FormData();
-      Object.entries(formData).forEach(([k, v]) => data.append(k, v));
+      console.log("Submitting JSON Data:", formData);
 
-      const res = await api.createLicense(data);
+      const res = await api.createLicense(formData); 
 
       if (res.success) {
         toast.success("Submitted successfully!");
@@ -72,7 +71,7 @@ function AddNew() {
         toast.error(res.message || "Failed to submit");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Submission error:", err);
       toast.error("Something went wrong while submitting");
     } finally {
       setSubmitting(false);
